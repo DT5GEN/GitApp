@@ -3,7 +3,7 @@ package com.dt5gen.gitapp
 import android.os.Handler
 import android.os.Looper
 
-private const val DATA_LOADING_FAKE_DELAY = 1_000L
+private const val DATA_LOADING_FAKE_DELAY = 2_000L
 
 class FakeUsersRepoImpl : UsersRepo {
 
