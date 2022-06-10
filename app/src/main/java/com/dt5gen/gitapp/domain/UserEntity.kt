@@ -1,4 +1,4 @@
-package com.dt5gen.gitapp
+package com.dt5gen.gitapp.domain
 
 data class UserEntity(
     val login: String,

@@ -1,4 +1,6 @@
-package com.dt5gen.gitapp
+package com.dt5gen.gitapp.domain
+
+import com.dt5gen.gitapp.domain.UserEntity
 
 interface UsersRepo {
 

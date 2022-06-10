@@ -1,7 +1,9 @@
-package com.dt5gen.gitapp
+package com.dt5gen.gitapp.data
 
 import android.os.Handler
 import android.os.Looper
+import com.dt5gen.gitapp.domain.UserEntity
+import com.dt5gen.gitapp.domain.UsersRepo
 
 private const val DATA_LOADING_FAKE_DELAY = 2_000L
 
