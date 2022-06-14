@@ -4,9 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.dt5gen.gitapp.App
 import com.dt5gen.gitapp.R
-import com.dt5gen.gitapp.domain.UserEntity
+import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.databinding.ItemUserBinding
 
 class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(

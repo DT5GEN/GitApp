@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.dt5gen.gitapp.data.FakeUsersRepoImpl
-import com.dt5gen.gitapp.domain.UsersRepo
+import com.dt5gen.gitapp.domain.repos.UsersRepo
 
-class App: Application() {
+class App : Application() {
 
     val users2Repo: UsersRepo by lazy { FakeUsersRepoImpl() }
 
