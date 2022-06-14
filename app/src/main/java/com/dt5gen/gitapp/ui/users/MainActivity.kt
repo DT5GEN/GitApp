@@ -6,10 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
-import com.dt5gen.gitapp.data.FakeUsersRepoImpl
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
-import com.dt5gen.gitapp.domain.repos.UsersRepo
 
 class MainActivity : AppCompatActivity(), UsersContract.View {
 
@@ -23,8 +21,13 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
-        presenter = UsersPresenter(app.users2Repo)
+        presenter = extractPresenter()
         presenter.attach(this)
+    }
+
+    private fun extractPresenter(): UsersContract.Presenter {
+        return lastCustomNonConfigurationInstance as? UsersContract.Presenter
+            ?: UsersPresenter(app.users2Repo)
     }
 
     override fun onDestroy() {
@@ -32,12 +35,16 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
         super.onDestroy()
     }
 
+
+    override fun onRetainCustomNonConfigurationInstance(): UsersContract.Presenter {
+        return presenter
+    }
+
     private fun initViews() {
         binding.refreshButton.setOnClickListener {
             presenter.onRefresh()
         }
         initRecyclerView()
-
         showProgress(false)
     }
 

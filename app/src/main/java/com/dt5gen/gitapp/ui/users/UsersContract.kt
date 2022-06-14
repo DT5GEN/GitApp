@@ -13,7 +13,7 @@ interface UsersContract {
     }
 
     interface Presenter{
-        fun attach(view: View)
+        fun attach(viewAttach: View)
         fun detach()
 
         fun onRefresh()
