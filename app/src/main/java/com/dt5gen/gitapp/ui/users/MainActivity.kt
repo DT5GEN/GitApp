@@ -9,7 +9,7 @@ import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
 
-class MainActivity : AppCompatActivity(), UsersContract.View {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private val adapter: UsersAdapter = UsersAdapter()
@@ -21,20 +21,22 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
-        viewModel = extractPresenter()
-        viewModel.attach(this)
+        initViewModel()
     }
 
-    private fun extractPresenter(): UsersContract.ViewModel {
+    private fun initViewModel() {
+        viewModel = extractViewModel()
+
+        viewModel.progressLiveData.observe(this) { showProgress(it) }
+        viewModel.usersLiveData.observe(this) { showUsers(it) }
+        viewModel.errorsLiveData.observe(this) { showError(it) }
+
+    }
+
+    private fun extractViewModel(): UsersContract.ViewModel {
         return lastCustomNonConfigurationInstance as? UsersContract.ViewModel
             ?: UsersViewModel(app.users2Repo)
     }
-
-    override fun onDestroy() {
-        viewModel.detach()
-        super.onDestroy()
-    }
-
 
     override fun onRetainCustomNonConfigurationInstance(): UsersContract.ViewModel {
         return viewModel
@@ -46,21 +48,18 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
         }
         initRecyclerView()
         showProgress(false)
-
-
     }
 
-
-    override fun showUsers(users: List<UserEntity>) {
+    private fun showUsers(users: List<UserEntity>) {
         adapter.setData(users)
     }
 
-    override fun showError(throwable: Throwable) {
+    private fun showError(throwable: Throwable) {
         Toast.makeText(this, throwable.message, Toast.LENGTH_SHORT).show()
 
     }
 
-    override fun showProgress(inProgress: Boolean) {
+    private fun showProgress(inProgress: Boolean) {
         binding.progressBar.isVisible = inProgress
         binding.usersRecyclerView.isVisible = !inProgress
     }
@@ -68,6 +67,5 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
     private fun initRecyclerView() {
         binding.usersRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.usersRecyclerView.adapter = adapter
-
     }
 }

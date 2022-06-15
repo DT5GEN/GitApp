@@ -1,6 +1,7 @@
 package com.dt5gen.gitapp.ui.users
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.dt5gen.gitapp.domain.entities.UserEntity
 
 
@@ -15,7 +16,7 @@ interface UsersContract {
 
     // cделали 3 элемента через колбэки на те же значения, чтобы нельзя было достучаться снаружи
 
-    interface ViewModel{
+    interface ViewModel {
 
         val usersLiveData: LiveData<List<UserEntity>>
         val errorsLiveData: LiveData<Throwable>
@@ -23,6 +24,11 @@ interface UsersContract {
 
         fun onRefresh()
 
+        fun <T> LiveData<T>.post(value: T) {
+            val mutable = this as? MutableLiveData<T>
+                ?: throw IllegalStateException(" It is not MutableLiveData! o_O ")
+            mutable.postValue(value)
+        }
 
     }
 

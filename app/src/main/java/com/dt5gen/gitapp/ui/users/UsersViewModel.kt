@@ -7,32 +7,9 @@ import com.dt5gen.gitapp.domain.repos.UsersRepo
 
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel {
 
-    private var view: UsersContract.View? = null
-
-    private var usersList: List<UserEntity>? = null
-    private var loadingError: Throwable? = null
-    private var inProgress: Boolean = false
-
-    override fun attach(viewAttach: UsersContract.View) {
-        this.view = viewAttach
-        viewAttach.showProgress(inProgress)
-        usersList?.let { viewAttach.showUsers(it) }
-        loadingError?.let { viewAttach.showError(it) }
-    }
-
-    override fun detach() {
-        view = null
-    }
-
-    private val _usersLiveData = MutableLiveData<List<UserEntity>>()
-    override val usersLiveData: LiveData<List<UserEntity>>
-        get() = _usersLiveData
-    private val _errorsLiveData = MutableLiveData<Throwable>()
-    override val errorsLiveData: LiveData<Throwable>
-        get() = _errorsLiveData
-    private val _progressLiveData = MutableLiveData<Boolean>()
-    override val progressLiveData: LiveData<Boolean>
-        get() = _progressLiveData
+    override val usersLiveData: LiveData<List<UserEntity>> = MutableLiveData()
+    override val errorsLiveData: LiveData<Throwable> = MutableLiveData()
+    override val progressLiveData: LiveData<Boolean> = MutableLiveData()
 
     override fun onRefresh() {
         loadData()
@@ -40,28 +17,23 @@ class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel
 
     private fun loadData() {
         //  Toast.makeText(this, "Работает!", Toast.LENGTH_SHORT).show()
-        view?.showProgress(true)
-        inProgress = true
-
+        progressLiveData.post(true)
         usersRepo.getUsers(
             onSuccess = {
-                view?.showProgress(false)
-                view?.showUsers(it)
-                usersList = it
-                loadingError = null
-                inProgress = false
+                progressLiveData.post(false)
+                usersLiveData.mutable().post(it)
 
             },
             onError = {
-                view?.showProgress(false)
-                view?.showError(it)
-                loadingError = it
-                inProgress = false
+                progressLiveData.post(false)
+                errorsLiveData.mutable().post(it)
+
             }
         )
     }
 
-//    fun <T> LiveData<T>.mutable(): MutableLiveData<T> {
-//        return this as? MutableLiveData<T>?:throw IllegalStateException (" It is not MutableLiveData! o_O ")
-//    }
+    private fun <T> LiveData<T>.mutable(): MutableLiveData<T> {
+        return this as? MutableLiveData<T>
+            ?: throw IllegalStateException(" It is not MutableLiveData! o_O ")
+    }
 }
