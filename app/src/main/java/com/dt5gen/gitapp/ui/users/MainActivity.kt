@@ -3,6 +3,7 @@ package com.dt5gen.gitapp.ui.users
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
@@ -46,6 +47,8 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
         }
         initRecyclerView()
         showProgress(false)
+
+
     }
 
 
