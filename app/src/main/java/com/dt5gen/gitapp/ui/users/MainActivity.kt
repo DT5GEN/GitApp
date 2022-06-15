@@ -3,7 +3,6 @@ package com.dt5gen.gitapp.ui.users
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
@@ -15,35 +14,35 @@ class MainActivity : AppCompatActivity(), UsersContract.View {
     private lateinit var binding: ActivityMainBinding
     private val adapter: UsersAdapter = UsersAdapter()
 
-    private lateinit var presenter: UsersContract.Presenter
+    private lateinit var viewModel: UsersContract.ViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
-        presenter = extractPresenter()
-        presenter.attach(this)
+        viewModel = extractPresenter()
+        viewModel.attach(this)
     }
 
-    private fun extractPresenter(): UsersContract.Presenter {
-        return lastCustomNonConfigurationInstance as? UsersContract.Presenter
-            ?: UsersPresenter(app.users2Repo)
+    private fun extractPresenter(): UsersContract.ViewModel {
+        return lastCustomNonConfigurationInstance as? UsersContract.ViewModel
+            ?: UsersViewModel(app.users2Repo)
     }
 
     override fun onDestroy() {
-        presenter.detach()
+        viewModel.detach()
         super.onDestroy()
     }
 
 
-    override fun onRetainCustomNonConfigurationInstance(): UsersContract.Presenter {
-        return presenter
+    override fun onRetainCustomNonConfigurationInstance(): UsersContract.ViewModel {
+        return viewModel
     }
 
     private fun initViews() {
         binding.refreshButton.setOnClickListener {
-            presenter.onRefresh()
+            viewModel.onRefresh()
         }
         initRecyclerView()
         showProgress(false)

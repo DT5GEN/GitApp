@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dt5gen.gitapp.R
-import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.databinding.ItemUserBinding
+import com.dt5gen.gitapp.domain.entities.UserEntity
 
 class UserViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
