@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
+import com.dt5gen.gitapp.utils.SingleEventLiveData
 
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel {
 
     override val usersLiveData: LiveData<List<UserEntity>> = MutableLiveData()
-    override val errorsLiveData: LiveData<Throwable> = MutableLiveData()
+    override val errorsLiveData: LiveData<Throwable> = SingleEventLiveData()
     override val progressLiveData: LiveData<Boolean> = MutableLiveData()
 
     override fun onRefresh() {
@@ -27,7 +28,6 @@ class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel
             onError = {
                 progressLiveData.post(false)
                 errorsLiveData.mutable().post(it)
-
             }
         )
     }
