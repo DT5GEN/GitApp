@@ -3,7 +3,6 @@ package com.dt5gen.gitapp
 import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.dt5gen.gitapp.data.FakeUsersRepoImpl
 import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 
