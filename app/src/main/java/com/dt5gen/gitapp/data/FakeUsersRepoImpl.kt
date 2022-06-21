@@ -4,6 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
+import io.reactivex.rxjava3.core.Single
 
 private const val DATA_LOADING_FAKE_DELAY = 2_000L
 
@@ -21,4 +22,6 @@ class FakeUsersRepoImpl : UsersRepo {
                    onError?.invoke(IllegalStateException("Ya error!"))  // проверка одноразовых событий ( single event )
         }, DATA_LOADING_FAKE_DELAY)
     }
+
+    override fun getUsers(): Single<List<UserEntity>> = Single.just(data)
 }

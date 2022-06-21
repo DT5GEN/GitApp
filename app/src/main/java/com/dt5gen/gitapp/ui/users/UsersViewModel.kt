@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import com.dt5gen.gitapp.utils.SingleEventLiveData
+import io.reactivex.rxjava3.kotlin.subscribeBy
 
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel {
 
@@ -24,7 +25,8 @@ openUserProfileLiveData.mutable().post(Unit)
     private fun loadData() {
         //  Toast.makeText(this, "Работает!", Toast.LENGTH_SHORT).show()
         progressLiveData.post(true)
-        usersRepo.getUsers(
+
+        usersRepo.getUsers().subscribeBy (
             onSuccess = {
                 progressLiveData.post(false)
                 usersLiveData.mutable().post(it)
