@@ -4,43 +4,54 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
-import com.dt5gen.gitapp.utils.SingleEventLiveData
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.Subject
 
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel {
 
-    override val usersLiveData: LiveData<List<UserEntity>> = MutableLiveData()
-    override val errorsLiveData: LiveData<Throwable> = SingleEventLiveData()
-    override val progressLiveData: LiveData<Boolean> = MutableLiveData()
-    override val openUserProfileLiveData: LiveData<Unit> = SingleEventLiveData()
+    override val usersData: Observable<List<UserEntity>> = BehaviorSubject.create()
+    override val errorsData: Observable<Throwable> = BehaviorSubject.create()
+    override val progressData: Observable<Boolean> = BehaviorSubject.create()
+    override val openUserProfileData: Observable<UserEntity> = BehaviorSubject.create()
 
     override fun onRefresh() {
         loadData()
     }
 
     override fun onProfileClick(userEntity: UserEntity) {
-openUserProfileLiveData.mutable().post(Unit)
+openUserProfileData.toMutable().onNext(userEntity)
+        loadData()
     }
 
     private fun loadData() {
         //  Toast.makeText(this, "Работает!", Toast.LENGTH_SHORT).show()
-        progressLiveData.post(true)
+        progressData.toMutable().onNext(true)
 
-        usersRepo.getUsers().subscribeBy (
+        usersRepo.getUsers()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy (
             onSuccess = {
-                progressLiveData.post(false)
-                usersLiveData.mutable().post(it)
+                progressData.toMutable().onNext(false)
+                usersData.toMutable().onNext(it)
 
             },
             onError = {
-                progressLiveData.post(false)
-                errorsLiveData.mutable().post(it)
+                progressData.toMutable().onNext(false)
+                errorsData.toMutable().onError(it)
             }
         )
     }
 
-    private fun <T> LiveData<T>.mutable(): MutableLiveData<T> {
+    private fun <T> LiveData<T>.toMutable(): MutableLiveData<T> {
         return this as? MutableLiveData<T>
+            ?: throw IllegalStateException(" It is not MutableLiveData! o_O ")
+    }
+
+    private fun <T: Any> Observable<T>.toMutable(): Subject<T> {
+        return this as? Subject<T>
             ?: throw IllegalStateException(" It is not MutableLiveData! o_O ")
     }
 }

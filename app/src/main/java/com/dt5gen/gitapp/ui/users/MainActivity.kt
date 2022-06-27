@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private lateinit var viewModel: UsersContract.ViewModel
+    private var viewModelDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,14 +32,20 @@ class MainActivity : AppCompatActivity() {
     private fun initViewModel() {
         viewModel = extractViewModel()
 
-        viewModel.progressLiveData.observe(this) { showProgress(it) }
-        viewModel.usersLiveData.observe(this) { showUsers(it) }
-        viewModel.errorsLiveData.observe(this) { showError(it) }
-        viewModel.openUserProfileLiveData.observe(this) {openAboutUserScreen()}
-
+        viewModelDisposable.addAll(
+            viewModel.progressData.subscribe { showProgress(it) },
+            viewModel.usersData.subscribe { showUsers(it) },
+            viewModel.errorsData.subscribe { showError(it) },
+            viewModel.openUserProfileData.subscribe { openAboutUserScreen() }
+        )
     }
 
-    private fun openAboutUserScreen(){
+    override fun onDestroy() {
+        viewModelDisposable.dispose()
+        super.onDestroy()
+    }
+
+    private fun openAboutUserScreen() {
         startActivity(Intent(this, AboutUserActivity::class.java))
     }
 

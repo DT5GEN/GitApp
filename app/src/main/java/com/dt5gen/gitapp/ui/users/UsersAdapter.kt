@@ -9,6 +9,10 @@ class UsersAdapter(private val onItemClickListener: (UserEntity) -> Unit) :
     RecyclerView.Adapter<UserViewHolder>() {
     private val data = mutableListOf<UserEntity>()
 
+//    private val adapter = UsersAdapter { user ->
+//        usersN.onProfileClick(user)
+//    }
+
     init {
         setHasStableIds(true)
     }

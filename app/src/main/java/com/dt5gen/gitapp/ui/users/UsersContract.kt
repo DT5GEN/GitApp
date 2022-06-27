@@ -3,6 +3,7 @@ package com.dt5gen.gitapp.ui.users
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dt5gen.gitapp.domain.entities.UserEntity
+import io.reactivex.rxjava3.core.Observable
 
 
 interface UsersContract {
@@ -18,10 +19,10 @@ interface UsersContract {
 
     interface ViewModel {
 
-        val usersLiveData: LiveData<List<UserEntity>>
-        val errorsLiveData: LiveData<Throwable>
-        val progressLiveData: LiveData<Boolean>
-        val openUserProfileLiveData: LiveData<Unit>
+        val usersData: Observable<List<UserEntity>>
+        val errorsData: Observable<Throwable>
+        val progressData: Observable<Boolean>
+        val openUserProfileData: Observable<UserEntity>
 
         fun onRefresh()
 
