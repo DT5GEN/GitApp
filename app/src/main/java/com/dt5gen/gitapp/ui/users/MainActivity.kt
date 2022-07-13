@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
+import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
+    private val usersRepo: UsersRepo by lazy { app.users2Repo }
     private lateinit var viewModel: UsersContract.ViewModel
     private var viewModelDisposable = CompositeDisposable()
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun extractViewModel(): UsersContract.ViewModel {
         return lastCustomNonConfigurationInstance as? UsersContract.ViewModel
-            ?: UsersViewModel(app.users2Repo)
+            ?: UsersViewModel(usersRepo)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): UsersContract.ViewModel {

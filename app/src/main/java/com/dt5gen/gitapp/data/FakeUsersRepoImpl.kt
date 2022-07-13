@@ -1,14 +1,15 @@
 package com.dt5gen.gitapp.data
 
 import android.os.Handler
-import android.os.Looper
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.core.Single
 
 private const val DATA_LOADING_FAKE_DELAY = 2_000L
 
-class FakeUsersRepoImpl : UsersRepo {
+class FakeUsersRepoImpl (
+    private val uiHandler: Handler
+        ): UsersRepo {
 
     private val data: List<UserEntity> = listOf(
         UserEntity("mojombo", 1, "https://avatars.githubusercontent.com/u/1?v=4"),
@@ -17,7 +18,7 @@ class FakeUsersRepoImpl : UsersRepo {
     )
 
     override fun getUsers(onSuccess: (List<UserEntity>) -> Unit, onError: ((Throwable) -> Unit)?) {
-        Handler(Looper.getMainLooper()).postDelayed({
+        uiHandler.postDelayed({
             onSuccess(data)
                    onError?.invoke(IllegalStateException("Ya error!"))  // проверка одноразовых событий ( single event )
         }, DATA_LOADING_FAKE_DELAY)

@@ -2,7 +2,6 @@ package com.dt5gen.gitapp.ui.users
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.dt5gen.gitapp.R
