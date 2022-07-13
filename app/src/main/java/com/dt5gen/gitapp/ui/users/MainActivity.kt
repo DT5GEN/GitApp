@@ -8,9 +8,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
-import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +18,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
-    private val usersRepo: UsersRepo by inject<UsersRepo>()
-    private lateinit var viewModel: UsersContract.ViewModel
+    private val viewModel : UsersViewModel by viewModel<UsersViewModel>()
     private var viewModelDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = extractViewModel()
 
         viewModelDisposable.addAll(
             viewModel.progressData.subscribe { showProgress(it) },
@@ -51,14 +48,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, AboutUserActivity::class.java))
     }
 
-    private fun extractViewModel(): UsersContract.ViewModel {
-        return lastCustomNonConfigurationInstance as? UsersContract.ViewModel
-            ?: UsersViewModel(usersRepo)
-    }
 
-    override fun onRetainCustomNonConfigurationInstance(): UsersContract.ViewModel {
-        return viewModel
-    }
+
 
     private fun initViews() {
         binding.refreshButton.setOnClickListener {

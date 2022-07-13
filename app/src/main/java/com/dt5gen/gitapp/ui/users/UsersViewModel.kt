@@ -2,6 +2,7 @@ package com.dt5gen.gitapp.ui.users
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -10,7 +11,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
 
-class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel {
+class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel, ViewModel() {
 
     override val usersData: Observable<List<UserEntity>> = BehaviorSubject.create()
     override val errorsData: Observable<Throwable> = BehaviorSubject.create()

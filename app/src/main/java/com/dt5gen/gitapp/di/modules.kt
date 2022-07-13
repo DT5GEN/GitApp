@@ -1,10 +1,10 @@
 package com.dt5gen.gitapp.di
 
-import android.os.Handler
-import android.os.Looper
 import com.dt5gen.gitapp.data.retrofit.GithubApi
 import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
 import com.dt5gen.gitapp.domain.repos.UsersRepo
+import com.dt5gen.gitapp.ui.users.UsersViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -27,6 +27,14 @@ val appModule = module {
     // Simple Presenter Factory
     factory <GithubApi> {
         get<Retrofit>().create(GithubApi::class.java) }
+
+
+    viewModel {
+
+        UsersViewModel(get())
+
+    }
+
 }
 
 //private val baseUrl = "https://api.github.com/"
@@ -39,3 +47,7 @@ val appModule = module {
 //private val uiHandler: Handler by lazy { Handler(Looper.getMainLooper()) }
 //
 //val users2Repo: UsersRepo by lazy { RetrofitUsersRepoImpl(api) }
+
+
+
+
