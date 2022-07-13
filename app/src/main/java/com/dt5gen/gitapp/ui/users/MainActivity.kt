@@ -6,11 +6,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
-    private val usersRepo: UsersRepo by lazy { app.users2Repo }
+    private val usersRepo: UsersRepo by inject<UsersRepo>()
     private lateinit var viewModel: UsersContract.ViewModel
     private var viewModelDisposable = CompositeDisposable()
 
