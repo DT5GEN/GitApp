@@ -6,10 +6,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
-    private val viewModel : UsersViewModel by viewModel<UsersViewModel>()
+    private val viewModel : UsersViewModel by lazy { UsersViewModel(app.appComponent.getUsersRepo()) }
     private var viewModelDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {

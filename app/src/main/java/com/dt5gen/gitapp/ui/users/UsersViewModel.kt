@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.Subject
 
+
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel, ViewModel() {
 
     override val usersData: Observable<List<UserEntity>> = BehaviorSubject.create()
@@ -20,6 +21,7 @@ class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel
 
     override fun onRefresh() {
         loadData()
+            // val getContext: Context = get(Context::class.java)  // способ достать контекст из любого места (НЕ РЕКОМЕНДУЕТСЯ К ИСПОЛЬЗОВАНИЮ)
     }
 
     override fun onProfileClick(userEntity: UserEntity) {

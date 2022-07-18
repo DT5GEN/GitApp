@@ -1,23 +1,29 @@
 package com.dt5gen.gitapp
 
-  import android.app.Application
-  import android.content.Context
-  import androidx.fragment.app.Fragment
-  import com.dt5gen.gitapp.di.appModule
-  import org.koin.android.ext.koin.androidContext
-  import org.koin.android.ext.koin.androidLogger
-  import org.koin.core.context.startKoin
+import android.app.Application
+import android.content.Context
+import androidx.fragment.app.Fragment
+import com.dt5gen.gitapp.di.AppComponent
+import com.dt5gen.gitapp.di.DaggerAppComponent
+import com.dt5gen.gitapp.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class App : Application() {
-
+    lateinit var appComponent: AppComponent
 
     override fun onCreate() {
         super.onCreate()
-        startKoin {
-            androidLogger()
-            androidContext(this@App)
-            modules(appModule)
-        }
+        appComponent = DaggerAppComponent.create()
+        appComponent.getUsersRepo()
+
+
+//        startKoin {
+//            androidLogger()
+//            androidContext(this@App)
+//            modules(appModule)
+//        }
     }
 }
 
