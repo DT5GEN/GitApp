@@ -5,25 +5,28 @@ import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import com.dt5gen.gitapp.ui.users.UsersViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
+import org.koin.core.qualifier.qualifier
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 val appModule = module {
-    val baseUrl = "https://api.github.com/"
+    single(qualifier("url")){"https://api.github.com/"}
+    single(named("name")){"dt5gen"}
 
     // single instance of HelloRepository
-    single<UsersRepo> { RetrofitUsersRepoImpl(get()) }
+
     single {
         Retrofit.Builder()
-    .baseUrl(baseUrl)
+    .baseUrl(get<String>(named("url")))
     .addConverterFactory(GsonConverterFactory.create())
     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .build()
 
     }
-
+    single<UsersRepo> { RetrofitUsersRepoImpl(get()) }
     // Simple Presenter Factory
     factory <GithubApi> {
         get<Retrofit>().create(GithubApi::class.java) }
