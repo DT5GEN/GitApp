@@ -19,10 +19,10 @@ interface UsersContract {
 
     interface ViewModel {
 
-        val usersData: Observable<List<UserEntity>>
-        val errorsData: Observable<Throwable>
-        val progressData: Observable<Boolean>
-        val openUserProfileData: Observable<UserEntity>
+        val usersObservableData: Observable<List<UserEntity>>
+        val errorsObservableData: Observable<Throwable>
+        val progressObservableData: Observable<Boolean>
+        val openObservableUserProfileData: Observable<UserEntity>
 
         fun onRefresh()
 

@@ -7,17 +7,21 @@ import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.SingleSubject
 import io.reactivex.rxjava3.subjects.Subject
+import javax.security.auth.SubjectDomainCombiner
 
 
 class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel, ViewModel() {
 
-    override val usersData: Observable<List<UserEntity>> = BehaviorSubject.create()
-    override val errorsData: Observable<Throwable> = BehaviorSubject.create()
-    override val progressData: Observable<Boolean> = BehaviorSubject.create()
-    override val openUserProfileData: Observable<UserEntity> = BehaviorSubject.create()
+    override val usersObservableData: Observable<List<UserEntity>> = BehaviorSubject.create()
+    override val errorsObservableData: Observable<Throwable> = BehaviorSubject.create()
+    override val progressObservableData: Observable<Boolean> = BehaviorSubject.create()
+    override val openObservableUserProfileData: Observable<UserEntity> = BehaviorSubject.create()
 
     override fun onRefresh() {
         loadData()
@@ -25,25 +29,27 @@ class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel
     }
 
     override fun onProfileClick(userEntity: UserEntity) {
-openUserProfileData.toMutable().onNext(userEntity)
-        loadData()
+//openObservableUserProfileData.toMutable().onNext(userEntity)
+
+       (openObservableUserProfileData as Subject).toMutable().onNext(userEntity)
+//        loadData()
     }
 
     private fun loadData() {
         //  Toast.makeText(this, "Работает!", Toast.LENGTH_SHORT).show()
-        progressData.toMutable().onNext(true)
+        progressObservableData.toMutable().onNext(true)
 
         usersRepo.getUsers()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy (
             onSuccess = {
-                progressData.toMutable().onNext(false)
-                usersData.toMutable().onNext(it)
+                progressObservableData.toMutable().onNext(false)
+                usersObservableData.toMutable().onNext(it)
 
             },
             onError = {
-                progressData.toMutable().onNext(false)
-                errorsData.toMutable().onError(it)
+                progressObservableData.toMutable().onNext(false)
+                errorsObservableData.toMutable().onError(it)
             }
         )
     }

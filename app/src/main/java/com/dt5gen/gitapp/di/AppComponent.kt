@@ -1,6 +1,6 @@
 package com.dt5gen.gitapp.di
 
-import com.dt5gen.gitapp.domain.repos.UsersRepo
+import com.dt5gen.gitapp.ui.users.MainActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -9,6 +9,5 @@ import javax.inject.Singleton
 
 interface AppComponent {
 
-    fun getUsersRepo(): UsersRepo
-
+    fun inject(mainActivity: MainActivity)
 }

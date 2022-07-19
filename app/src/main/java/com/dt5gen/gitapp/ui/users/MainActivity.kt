@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
+import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,13 +20,21 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
-    private val viewModel : UsersViewModel by lazy { UsersViewModel(app.appComponent.getUsersRepo()) }
+    @Inject
+    lateinit var usersRepo: UsersRepo
+
+    private val viewModel: UsersViewModel by lazy { UsersViewModel(usersRepo) }
+
     private var viewModelDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        app.appComponent.inject(this)
+
         initViews()
         initViewModel()
     }
@@ -32,10 +42,10 @@ class MainActivity : AppCompatActivity() {
     private fun initViewModel() {
 
         viewModelDisposable.addAll(
-            viewModel.progressData.subscribe { showProgress(it) },
-            viewModel.usersData.subscribe { showUsers(it) },
-            viewModel.errorsData.subscribe { showError(it) },
-            viewModel.openUserProfileData.subscribe { openAboutUserScreen() }
+            viewModel.progressObservableData.subscribe { showProgress(it) },
+            viewModel.usersObservableData.subscribe { showUsers(it) },
+            viewModel.errorsObservableData.subscribe { showError(it) },
+            viewModel.openObservableUserProfileData.subscribe { openAboutUserScreen() }
         )
     }
 
@@ -47,8 +57,6 @@ class MainActivity : AppCompatActivity() {
     private fun openAboutUserScreen() {
         startActivity(Intent(this, AboutUserActivity::class.java))
     }
-
-
 
 
     private fun initViews() {
