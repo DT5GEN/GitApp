@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dt5gen.gitapp.domain.entities.UserEntity
 import com.dt5gen.gitapp.domain.repos.UsersRepo
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -13,10 +14,11 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.SingleSubject
 import io.reactivex.rxjava3.subjects.Subject
+import javax.inject.Inject
 import javax.security.auth.SubjectDomainCombiner
 
-
-class UsersViewModel(private val usersRepo: UsersRepo) : UsersContract.ViewModel, ViewModel() {
+@HiltViewModel
+class UsersViewModel @Inject constructor (private val usersRepo: UsersRepo) : UsersContract.ViewModel, ViewModel() {
 
     override val usersObservableData: Observable<List<UserEntity>> = BehaviorSubject.create()
     override val errorsObservableData: Observable<Throwable> = BehaviorSubject.create()

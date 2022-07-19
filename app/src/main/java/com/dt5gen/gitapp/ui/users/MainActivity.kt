@@ -3,16 +3,16 @@ package com.dt5gen.gitapp.ui.users
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
-import com.dt5gen.gitapp.domain.repos.UsersRepo
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -20,10 +20,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.onProfileClick(it)
     }
 
-    @Inject
-    lateinit var usersRepo: UsersRepo
-
-    private val viewModel: UsersViewModel by lazy { UsersViewModel(usersRepo) }
+   private val viewModel: UsersViewModel by  viewModels()
 
     private var viewModelDisposable = CompositeDisposable()
 
@@ -31,9 +28,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        app.appComponent.inject(this)
 
         initViews()
         initViewModel()
