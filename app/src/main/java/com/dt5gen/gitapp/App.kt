@@ -3,17 +3,12 @@ package com.dt5gen.gitapp
   import android.app.Application
 import android.content.Context
 import androidx.fragment.app.Fragment
-  import com.dt5gen.gitapp.data.retrofit.GithubApi
-  import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
-  import com.dt5gen.gitapp.di.DiDependencies
-  import com.dt5gen.gitapp.domain.repos.UsersRepo
-  import retrofit2.Retrofit
-  import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-  import retrofit2.converter.gson.GsonConverterFactory
+  import com.dt5gen.gitapp.di.Di
+  import com.dt5gen.gitapp.di.DiDependenciesImpl
 
 class App : Application() {
 
-    val di by lazy { DiDependencies() }
+    val di : Di = DiDependenciesImpl()
 
     override fun onCreate() {
         super.onCreate()

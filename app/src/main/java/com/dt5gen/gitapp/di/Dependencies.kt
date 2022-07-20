@@ -6,8 +6,16 @@ import com.dt5gen.gitapp.domain.repos.UsersRepo
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Array.get
+import java.util.*
 
-class DiDependencies {
+interface Di {
+
+    val users2Repo : UsersRepo
+    val getRandomString: String
+}
+
+class DiDependenciesImpl: Di {
     private val baseUrl = "https://api.github.com/"
     private val retrofit by lazy {   Retrofit.Builder()
         .baseUrl(baseUrl)
@@ -15,5 +23,8 @@ class DiDependencies {
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .build() }
     private val api: GithubApi by lazy { retrofit.create(GithubApi::class.java)}
-    val users2Repo: UsersRepo by lazy { RetrofitUsersRepoImpl(api) }
+   override val users2Repo: UsersRepo by lazy { RetrofitUsersRepoImpl(api) }
+    override val getRandomString: String
+        get() = UUID.randomUUID().toString()
+
 }
