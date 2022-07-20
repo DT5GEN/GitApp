@@ -9,7 +9,10 @@ import com.dt5gen.gitapp.R
 import com.dt5gen.gitapp.databinding.ItemUserBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
 
-class UserViewHolder(parent: ViewGroup, private val inItemClickListener: (userEntity: UserEntity) -> Unit) : RecyclerView.ViewHolder(
+class UserViewHolder(
+    parent: ViewGroup,
+    private val inItemClickListener: (userEntity: UserEntity) -> Unit
+) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_user, parent, false)
 ) {
 
@@ -17,13 +20,13 @@ class UserViewHolder(parent: ViewGroup, private val inItemClickListener: (userEn
 
     private val binding = ItemUserBinding.bind(itemView).apply {
         root.setOnClickListener {
-       // avatarImageView.setOnClickListener { // вариант активного кликания по аватарке
+            // avatarImageView.setOnClickListener { // вариант активного кликания по аватарке
             inItemClickListener.invoke(userEntity)
         }
     }
 
     fun bind(userEntityBind: UserEntity) {
-this.userEntity = userEntityBind
+        this.userEntity = userEntityBind
         // itemView.context.applicationContext as App // некий глобальный синглтон который можно достать из любого места
 
         // todo разобраться с аватаркой
