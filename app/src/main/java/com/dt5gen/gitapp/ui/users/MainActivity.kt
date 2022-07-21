@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dt5gen.gitapp.app
 import com.dt5gen.gitapp.databinding.ActivityMainBinding
 import com.dt5gen.gitapp.domain.entities.UserEntity
+import com.dt5gen.gitapp.domain.repos.UsersRepo
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 class MainActivity : AppCompatActivity() {
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun extractViewModel(): UsersContract.ViewModel {
         return lastCustomNonConfigurationInstance as? UsersContract.ViewModel
-            ?: UsersViewModel(app.di.users2Repo)
+            ?: UsersViewModel(app.di.get(UsersRepo::class))
     }
 
     override fun onRetainCustomNonConfigurationInstance(): UsersContract.ViewModel {

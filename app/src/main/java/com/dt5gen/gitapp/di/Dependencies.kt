@@ -1,30 +1,35 @@
 package com.dt5gen.gitapp.di
 
-import com.dt5gen.gitapp.data.retrofit.GithubApi
-import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
-import com.dt5gen.gitapp.domain.repos.UsersRepo
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Array.get
-import java.util.*
+import kotlin.reflect.KClass
 
 interface Di {
 
-    val users2Repo : UsersRepo
-    val getRandomString: String
+    fun <T : Any> get(clazz: KClass<T>): T
+    fun <T : Any> add(clazz: KClass<*> , dependency: T)
+    fun <T : Any> add( dependency: T)
+
 }
 
-class DiDependenciesImpl: Di {
-    private val baseUrl = "https://api.github.com/"
-    private val retrofit by lazy {   Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-        .build() }
-    private val api: GithubApi by lazy { retrofit.create(GithubApi::class.java)}
-   override val users2Repo: UsersRepo by lazy { RetrofitUsersRepoImpl(api) }
-    override val getRandomString: String
-        get() = UUID.randomUUID().toString()
+class DiDependenciesImpl : Di {
+
+    private val dependenciesHolder = HashMap<KClass<*>, Any>()
+
+    override fun <T : Any> get(clazz: KClass<T>): T {
+        if (dependenciesHolder.containsKey(clazz)) {
+            return dependenciesHolder[clazz] as T
+        } else {
+            throw IllegalArgumentException("Have not class in graph -> $this")
+        }
+    }
+
+
+    override fun <T : Any> add(clazz: KClass<*> , dependency: T) {
+        dependenciesHolder[clazz] = dependency
+    }
+
+
+    override fun <T : Any> add( dependency: T) {
+        dependenciesHolder[dependency::class] = dependency
+    }
 
 }
