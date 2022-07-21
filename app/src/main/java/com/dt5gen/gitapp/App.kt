@@ -8,8 +8,12 @@ package com.dt5gen.gitapp
 
 class App : Application() {
 
-    val di = DiDependenciesImpl().apply {
-        DiModule(this)
+//    val di = DiDependenciesImpl.apply {
+//        DiModule()
+//    }
+
+    init{
+        DiModule()
     }
 }
 

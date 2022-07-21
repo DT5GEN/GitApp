@@ -1,6 +1,8 @@
 package com.dt5gen.gitapp.di
 
 import com.dt5gen.dilibra.DiDependenciesImpl
+import com.dt5gen.dilibra.Fabric
+import com.dt5gen.dilibra.Singleton
 import com.dt5gen.gitapp.data.retrofit.GithubApi
 import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
 import com.dt5gen.gitapp.domain.repos.UsersRepo
@@ -9,7 +11,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
-class DiModule (di: DiDependenciesImpl) {
+class DiModule {
 
     private val baseUrl = "https://api.github.com/"
     private val retrofit by lazy {
@@ -28,8 +30,8 @@ class DiModule (di: DiDependenciesImpl) {
 
 
     init {
-        di.add(UsersRepo::class, users2Repo)
-        di.add(randomString)
+        DiDependenciesImpl.add(UsersRepo::class, Singleton{ users2Repo })
+        DiDependenciesImpl.add(String::class, Fabric{ randomString })
     }
 
 }
