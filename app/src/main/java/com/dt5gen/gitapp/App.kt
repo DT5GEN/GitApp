@@ -1,15 +1,14 @@
 package com.dt5gen.gitapp
 
   import android.app.Application
-import android.content.Context
-import androidx.fragment.app.Fragment
-  import com.dt5gen.gitapp.di.Di
-  import com.dt5gen.gitapp.di.DiDependenciesImpl
+  import android.content.Context
+  import androidx.fragment.app.Fragment
+  import com.dt5gen.dilibra.DiDependenciesImpl
   import com.dt5gen.gitapp.di.DiModule
 
 class App : Application() {
 
-    val di : Di = DiDependenciesImpl().apply {
+    val di = DiDependenciesImpl().apply {
         DiModule(this)
     }
 }
