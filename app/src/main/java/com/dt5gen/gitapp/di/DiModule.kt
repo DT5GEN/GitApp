@@ -1,8 +1,7 @@
 package com.dt5gen.gitapp.di
 
-import com.dt5gen.dilibra.DiDependenciesImpl
-import com.dt5gen.dilibra.Fabric
-import com.dt5gen.dilibra.Singleton
+import com.dt5gen.dilibra.Module
+import com.dt5gen.dilibra.get
 import com.dt5gen.gitapp.data.retrofit.GithubApi
 import com.dt5gen.gitapp.data.retrofit.RetrofitUsersRepoImpl
 import com.dt5gen.gitapp.domain.repos.UsersRepo
@@ -11,27 +10,20 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 
-class DiModule {
+val appModule = Module{
 
-    private val baseUrl = "https://api.github.com/"
-    private val retrofit by lazy {
+    val baseUrl = "https://api.github.com/"
+
+    singleton <Retrofit>{
         Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
             .build()
     }
-    private val api: GithubApi by lazy { retrofit.create(GithubApi::class.java) }
+    singleton<GithubApi> { get<Retrofit>().create(GithubApi::class.java) }
 
+    singleton<UsersRepo> { RetrofitUsersRepoImpl(get()) }
 
-    private val users2Repo: UsersRepo by lazy { RetrofitUsersRepoImpl(api) }
-    private val randomString: String
-        get() = UUID.randomUUID().toString()
-
-
-    init {
-        DiDependenciesImpl.add(UsersRepo::class, Singleton{ users2Repo })
-        DiDependenciesImpl.add(String::class, Fabric{ randomString })
-    }
-
+    fabric { UUID.randomUUID().toString() }
 }

@@ -3,18 +3,14 @@ package com.dt5gen.gitapp
   import android.app.Application
   import android.content.Context
   import androidx.fragment.app.Fragment
-  import com.dt5gen.dilibra.DiDependenciesImpl
-  import com.dt5gen.gitapp.di.DiModule
+  import com.dt5gen.gitapp.di.appModule
 
 class App : Application() {
 
-//    val di = DiDependenciesImpl.apply {
-//        DiModule()
-//    }
+  init{
+    appModule.install()
+  }
 
-    init{
-        DiModule()
-    }
 }
 
 val Context.app: App get() = applicationContext as App  // теперь в MainActivity удобно доставать app, моментальный доступ к синглтону
